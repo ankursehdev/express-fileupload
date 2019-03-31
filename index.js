@@ -19,7 +19,8 @@ app.post('/upload',function(req,res){
   if(req.files.uploadedFile) {
     var file = req.files.uploadedFile,
         filename = file.name,
-        fileSize = file.size;
+        fileSize = file.size,
+        fileType = file.mimetype;
 
     var pathToUpload = __dirname + '/saves/' + filename;
 
@@ -30,9 +31,15 @@ app.post('/upload',function(req,res){
       } else {
         console.log("File Uploaded",filename);
         res.statusCode = 200;
-        res.setHeader('Content-Type', 'text/html');
-        var output = '<h3>Success</h3><b>Name: </b>' + filename + '<br/><b>FileSize </b>' + fileSize;
-        res.send(output);
+        res.setHeader('Content-Type', 'application/json');
+        
+        const output = {
+          'filename': filename,
+          'size': fileSize,
+          'mimeType': fileType
+        }
+       // var output = '<h3>Success</h3><b>Name: </b>' + filename + '<br/><b>FileSize </b>' + fileSize;
+        res.send(JSON.stringify(output, null, 2));
       }
     })
   } else {
